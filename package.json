@@ -1,0 +1,20 @@
+{
+  "name": "mario-canvas",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1412199/1412199-DHUD-DA-GameMario.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/1412199/1412199-DHUD-DA-GameMario/issues"
+  },
+  "homepage": "https://github.com/1412199/1412199-DHUD-DA-GameMario#readme"
+}

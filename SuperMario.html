@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> Super Mario</title>
+	<script src="js/core/AnimatedSprite.js"></script>
+	<script src="js/core/StaticSprite.js"></script>
+	<script src="js/core/ImgLoader.js"></script>
+	<script src="js/core/MenuItem.js"></script>
+	<script src="js/core/Screen.js"></script>
+	<script src="js/map.js"></script>
+	<script src="js/mapdata.js"></script>
+	<script src="js/character.js"></script>
+	<script src="js/player.js"></script>
+	<script src="js/monster.js"></script>
+	<script src="js/PiranhaPlant.js"></script>
+	<script src="js/mushroom.js"></script>
+	<script src="js/bullet.js"></script>
+	<script src="js/Game.js"></script>
+</head>
+<body>
+	<center>
+		<canvas id="canvas-game" width="800" height="400" tabindex="1" style="border: 1px solid" ></canvas>
+	</center>
+	<script>
+	// Constants
+	var TITLE_TEXT = "Super Mario V1.0";
+	var INFO_TEXT = "Made by 1412199";
+	var FPS =  60;
+	var GRAVITY = 0.35;
+	//  Define which keys are used in game
+	var Keys = {
+		LEFT_ARROW: 37,
+		RIGHT_ARROW: 39,
+		SPACE: 32,
+		Z: 90
+	};
+	var AVAILABLE_KEYS =
+		[
+			Keys.LEFT_ARROW,
+			Keys.RIGHT_ARROW,
+			Keys.SPACE,
+			Keys.Z
+		];
+
+	var _images;
+
+	function setup(){
+
+		var canvas = document.getElementById("canvas-game");
+		var context = canvas.getContext("2d");
+		context.textAlign = "center";
+		// pre-load all needed images before starting game
+		var sources = {
+		  mario: "img/smb_mario_sheet.png",
+		  background: "img/background.png",
+		  enemies: "img/smb_enemies_sheet.png",
+		  items: "img/supermariobros_items_sheet.png",
+		  helpscreen: "img/helpscreen.png",
+		  castle: "img/castle.png",
+		  pipe_head: "img/pipe_head.png",
+		  pipe_body: "img/pipe_body.png",
+		};
+
+		var loader = new ImgLoader(sources,
+			function(image,percent) {	// on progressing callback
+
+				context.clearRect(0,0,canvas.width,canvas.height);
+				context.fillText("Loading: "+percent+"%",canvas.width/2,canvas.height/2);
+			},
+			function(images){			// completed
+
+				_images = images;
+				// create the help screen
+				var helpScreen,welcomeScreen;
+				helpScreen = new Screen(canvas);
+				helpScreen.beforeDraw = function(context){
+					context.drawImage(images.helpscreen,0,0,canvas.width, canvas.height);
+				};
+				var cx = canvas.width/2;
+				// adding the Back button
+				helpScreen.addItem(new MenuItem({
+							left: cx-100,
+							top: canvas.height-60,
+							width: 200,
+							height: 40,
+							text: "Back",
+							onclick: function(){
+								// back to welcome screen
+								helpScreen.stop();
+								welcomeScreen.start();
+							}
+						}));
+
+					// create the welcome screen
+					welcomeScreen = new Screen(canvas,true);
+					var titles = ["Play","How To Play"];
+					// add 3 button to this screen
+					for(var i=0;i<titles.length;i++){
+						welcomeScreen.addItem(new MenuItem({
+							left: cx-100,
+							top: 150+50*i,
+							width: 200,
+							height: 40,
+							text: titles[i]
+						}));
+					}
+					welcomeScreen.items[0].onclick = function(){
+						welcomeScreen.stop();
+						// start game
+						new Game(canvas,context).init();
+					};
+					welcomeScreen.items[1].onclick = function(){
+						welcomeScreen.stop();
+						helpScreen.start();
+					};
+					welcomeScreen.start();
+			}
+		);
+	}
+	window.onload = function(){
+		setup();
+	}
+	</script>
+</body>
+</html>
